@@ -24,10 +24,13 @@ if (missingEnvVars.length > 0) {
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// CORS configuration - restrict to specific origins in production
+// CORS configuration - allow all origins in production (Railway)
+// In production, you can restrict this to your specific frontend URL
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
-  credentials: true,
+  origin: process.env.CORS_ORIGIN === '*' 
+    ? '*' 
+    : (process.env.CORS_ORIGIN || 'http://localhost:3000'),
+  credentials: process.env.CORS_ORIGIN === '*' ? false : true,
   optionsSuccessStatus: 200,
 };
 
