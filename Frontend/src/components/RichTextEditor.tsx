@@ -13,10 +13,10 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Enter t
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    if (editorRef.current && value) {
-      editorRef.current.innerHTML = value;
+    if (editorRef.current && !isEditing) {
+      editorRef.current.innerHTML = value || '';
     }
-  }, []);
+  }, [value, isEditing]);
 
   const applyFormat = (command: string, value?: string) => {
     document.execCommand(command, false, value);
