@@ -185,7 +185,10 @@ export default function SimpleTaskCard({
 
       {/* Description */}
       {task.description && (
-        <p className="text-xs text-gray-400 line-clamp-2 mb-1.5 sm:mb-2">{task.description}</p>
+        <div 
+          className="text-xs text-gray-400 line-clamp-2 mb-1.5 sm:mb-2"
+          dangerouslySetInnerHTML={{ __html: task.description }}
+        />
       )}
 
       {/* Categories */}

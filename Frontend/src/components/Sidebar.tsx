@@ -21,8 +21,12 @@ export default function Sidebar({ onSettingsClick }: SidebarProps) {
   return (
     <div className="w-20 bg-gray-900 border-r border-gray-800 h-screen flex flex-col items-center py-6 fixed left-0 top-0 shadow-xl">
       {/* Logo - Compact */}
-      <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-xl flex items-center justify-center mb-8 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
-        <span className="text-2xl font-bold text-gray-900">✓</span>
+      <div 
+        onClick={() => router.push('/dashboard')}
+        className="w-11 h-11 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-xl flex items-center justify-center mb-8 shadow-lg hover:shadow-xl transition-all cursor-pointer hover:scale-105"
+        title="Go to Dashboard"
+      >
+        <span className="text-xl font-bold text-gray-900">✓</span>
       </div>
 
       {/* Spacer */}

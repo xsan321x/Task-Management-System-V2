@@ -13,10 +13,14 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Enter t
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    if (editorRef.current && !isEditing) {
-      editorRef.current.innerHTML = value || '';
+    if (editorRef.current) {
+      // Only update if the content is different and we're not currently editing
+      const currentContent = editorRef.current.innerHTML;
+      if (currentContent !== value && !isEditing) {
+        editorRef.current.innerHTML = value || '';
+      }
     }
-  }, [value, isEditing]);
+  }, [value]);
 
   const applyFormat = (command: string, value?: string) => {
     document.execCommand(command, false, value);
@@ -26,10 +30,7 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Enter t
   const handleInput = () => {
     if (editorRef.current) {
       const html = editorRef.current.innerHTML;
-      // Don't save placeholder text
-      if (html !== `<span class="text-gray-400">${placeholder}</span>`) {
-        onChange(html);
-      }
+      onChange(html);
     }
   };
 
@@ -44,18 +45,11 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Enter t
 
   const handleFocus = () => {
     setIsEditing(true);
-    // Clear placeholder if it exists
-    if (editorRef.current && editorRef.current.innerHTML === `<span class="text-gray-400">${placeholder}</span>`) {
-      editorRef.current.innerHTML = '';
-    }
   };
 
   const handleBlur = () => {
     setIsEditing(false);
-    // Show placeholder if empty
-    if (editorRef.current && !editorRef.current.textContent?.trim()) {
-      editorRef.current.innerHTML = '';
-    }
+    handleInput();
   };
 
   const insertList = (ordered: boolean) => {
@@ -211,29 +205,25 @@ export default function RichTextEditor({ value, onChange, placeholder = 'Enter t
       </div>
 
       {/* Editor */}
-      <div
-        ref={editorRef}
-        contentEditable
-        suppressContentEditableWarning
-        onInput={handleInput}
-        onPaste={handlePaste}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        className={`w-full px-3 py-2 bg-gray-700 border rounded-b-lg text-white focus:outline-none transition-all min-h-20 max-h-40 overflow-y-auto text-sm ${
-          isEditing ? 'border-yellow-500 ring-1 ring-yellow-500' : 'border-gray-600'
-        }`}
-        style={{
-          whiteSpace: 'pre-wrap',
-          wordWrap: 'break-word',
-        }}
-      />
-
-      {/* Placeholder */}
-      {!value && !isEditing && (
-        <div className="text-xs text-gray-400 px-3 py-1">
-          {placeholder}
-        </div>
-      )}
+      <div className="relative">
+        <div
+          ref={editorRef}
+          contentEditable
+          suppressContentEditableWarning
+          onInput={handleInput}
+          onPaste={handlePaste}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          className={`w-full px-3 py-2 bg-gray-700 border rounded-b-lg text-white focus:outline-none transition-all min-h-20 max-h-40 overflow-y-auto text-sm ${
+            isEditing ? 'border-yellow-500 ring-1 ring-yellow-500' : 'border-gray-600'
+          }`}
+          style={{
+            whiteSpace: 'pre-wrap',
+            wordWrap: 'break-word',
+          }}
+          data-placeholder={!value && !isEditing ? placeholder : ''}
+        />
+      </div>
 
       {/* Character Count */}
       <div className="text-xs text-gray-400 text-right">
